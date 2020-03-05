@@ -11,14 +11,22 @@ class RPQ:
     # data - array of data
     @staticmethod
     def loss_function(data):
-        time = sum(data[0])
-        for t in range(2, len(data)):
-            task = data[t]
-            if time >= task[0]:
-                time = time + task[1] + task[2]
+        max_time_q = sum(data[0])
+        time = data[0][0] + data[0][1]
+        C = []
+        C.append(time)
+        for t in range(1, len(data)):
+            if time > data[t][0]:
+                time = time + data[t][1]
             else:
-                time = task[0] + task[1] + task[2]
-        return time
+                time = data[t][0] + data[t][1]
+
+            time_q = data[t][2] + time
+            max_time_q = max(max_time_q, time_q)
+            C.append(time)
+
+        C.append(max_time_q)
+        return C
 
     # data - array of data [r, p, q]
     @staticmethod
@@ -30,9 +38,13 @@ class RPQ:
 
 n, data = RPQ.readData('D:\Programming\python\SPD\data10.txt')
 inoreder = RPQ.sort_R(data)
+print(inoreder)
+print(data)
 sorted = RPQ.loss_function(inoreder)
+
 not_sorted = RPQ.loss_function(data)
 print('sort by R')
 print(sorted)
 print('\nnon sorted')
 print(not_sorted)
+
