@@ -14,7 +14,6 @@ class RPQ:
         max_time_q = sum(data[0])
         time = data[0][0] + data[0][1]
         C = []
-        C.append(time)
         for t in range(1, len(data)):
             if time > data[t][0]:
                 time = time + data[t][1]
@@ -24,7 +23,6 @@ class RPQ:
             time_q = data[t][2] + time
             max_time_q = max(max_time_q, time_q)
             C.append(time)
-
         C.append(max_time_q)
         return C
 
@@ -36,15 +34,19 @@ class RPQ:
         return order_by_access_time
 
 
-n, data = RPQ.readData('D:\Programming\python\SPD\data10.txt')
-inoreder = RPQ.sort_R(data)
-print(inoreder)
-print(data)
-sorted = RPQ.loss_function(inoreder)
+def main():
+    n, data = RPQ.readData('D:\Programming\python\SPD\data10.txt')
+    inoreder = RPQ.sort_R(data)
+    print(inoreder)
+    print(data)
+    sorted = RPQ.loss_function(inoreder)
 
-not_sorted = RPQ.loss_function(data)
-print('sort by R')
-print(sorted)
-print('\nnon sorted')
-print(not_sorted)
+    not_sorted = RPQ.loss_function(data)
+    print('sort by R')
+    print(sorted)
+    print('\nnon sorted')
+    print(not_sorted)
 
+
+if __name__ == '__main__':
+    main()
