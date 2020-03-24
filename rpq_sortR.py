@@ -36,7 +36,7 @@ class RPQ:
     @staticmethod
     def sort_R_and_Q(data):
         order = data.copy()
-        order.sort(key=lambda x: [x[0], x[2]])
+        order.sort(key=lambda x: (x[0], x[2]))
         # print(order)
         return order
 
