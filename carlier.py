@@ -1,5 +1,5 @@
 import math
-
+import copy
 from rpq_sortR import RPQ
 from schrage import Schrage
 from schrage_pmtn import SchragePmtn
@@ -15,18 +15,18 @@ class Carlier(SchragePmtn):
 
     @staticmethod
     def do_carlier(data, UB):
-        Pi_star = data
+        #Pi_star = data deepcoy
         Pi = Schrage.schrage_nlogn(data)
         U = max(RPQ.loss_function(Pi))
         if U < UB[0]:
             UB[0] = U
-            Pi_star = Pi
+            #Pi_star = Pi
 
-        b, c = Carlier.find_a_b_c(Pi_star)
+        b, c = Carlier.find_a_b_c(Pi)
         if c is None:
             return
 
-        K = Carlier.find_k(Pi_star, c, b)
+        K = Carlier.find_k(Pi, c, b)
         r_ = min(K, key=lambda x: x[0])[0]
         q_ = min(K, key=lambda x: x[2])[2]
         p_ = sum(i for _, i, _ in K)
@@ -36,20 +36,20 @@ class Carlier(SchragePmtn):
         #######################
         tmp_r = c[0]
         c[0] = max(tmp_r, r_ + p_)
-        LB = SchragePmtn.schrage_nlogn_pmtn(Pi_star)
+        LB = SchragePmtn.schrage_nlogn_pmtn(copy.deepcopy(Pi))
 
         # LB = max(H, Hc, LB)
         if LB < UB[0]:
-            Carlier.do_carlier(Pi_star, UB)
+            Carlier.do_carlier(Pi, UB)
         c[0] = tmp_r
         #######################
         #######################
         tmp_q = c[2]
         c[2] = max(tmp_q, q_ + p_)
-        LB = SchragePmtn.schrage_nlogn_pmtn(Pi_star)
+        LB = SchragePmtn.schrage_nlogn_pmtn(copy.deepcopy(Pi))
         # LB = max(H, Hc, LB)
         if LB < UB[0]:
-            Carlier.do_carlier(Pi_star, UB)
+            Carlier.do_carlier(Pi, UB)
         c[2] = tmp_q
 
     #####################################################
@@ -71,6 +71,7 @@ class Carlier(SchragePmtn):
         time = 0
         C = RPQ.loss_function(Pi)
         Cmax = max(C)
+
         b = None
         for task in Pi:
             time = max(time, task[0]) + task[1]
