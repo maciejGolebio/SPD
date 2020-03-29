@@ -10,22 +10,23 @@ class Carlier(SchragePmtn):
     @staticmethod
     def carlier(data):
         UB = [math.inf]
-        Pi_star = data.copy()
-        Carlier.do_carlier(Pi_star, UB)
+        Carlier.do_carlier(data, UB)
         return UB[0]
 
     @staticmethod
-    def do_carlier(Pi_star, UB):
-        Pi = Schrage.schrage_nlogn(Pi_star)
+    def do_carlier(data, UB):
+        Pi_star = data
+        Pi = Schrage.schrage_nlogn(data)
         U = max(RPQ.loss_function(Pi))
         if U < UB[0]:
             UB[0] = U
+            Pi_star = Pi
 
-        a, b, c = Carlier.find_a_b_c(Pi)
+        b, c = Carlier.find_a_b_c(Pi_star)
         if c is None:
             return
 
-        K = Carlier.find_k(Pi, c, b)
+        K = Carlier.find_k(Pi_star, c, b)
         r_ = min(K, key=lambda x: x[0])[0]
         q_ = min(K, key=lambda x: x[2])[2]
         p_ = sum(i for _, i, _ in K)
@@ -33,24 +34,22 @@ class Carlier(SchragePmtn):
         H = r_ + p_ + q_
         Hc = H + sum(c)
         #######################
-        # TODO dwie linie poniżej wrażliwe na głupte
-
         tmp_r = c[0]
-        c[0] = max(c[0], r_ + p_)
+        c[0] = max(tmp_r, r_ + p_)
+        LB = SchragePmtn.schrage_nlogn_pmtn(Pi_star)
 
-        LB = SchragePmtn.schrage_nlogn_pmtn(Pi)
         # LB = max(H, Hc, LB)
         if LB < UB[0]:
-            Carlier.do_carlier(Pi, UB)
-
+            Carlier.do_carlier(Pi_star, UB)
         c[0] = tmp_r
         #######################
+        #######################
         tmp_q = c[2]
-        c[2] = max(c[2], q_ + p_)
-        LB = SchragePmtn.schrage_nlogn_pmtn(Pi)
+        c[2] = max(tmp_q, q_ + p_)
+        LB = SchragePmtn.schrage_nlogn_pmtn(Pi_star)
         # LB = max(H, Hc, LB)
         if LB < UB[0]:
-            Carlier.do_carlier(Pi, UB)
+            Carlier.do_carlier(Pi_star, UB)
         c[2] = tmp_q
 
     #####################################################
@@ -58,8 +57,10 @@ class Carlier(SchragePmtn):
     #####################################################
 
     @staticmethod
-    def find_a_b_c(Pi) -> (int, int, int):
-        # TODO jeżeli bugi sprawdzić wartość vs ref
+    def find_a_b_c(Pi) -> (int, int):
+        """"
+        :return (b,c)
+        """
         # times = list(accumulate([[0, 0, 0]] + Pi, lambda a, y: ([max(a[0], y[0]) + y[1]])))
         # times.pop(0)
         # tasks_times = list(zip(Pi, times))
@@ -70,8 +71,6 @@ class Carlier(SchragePmtn):
         time = 0
         C = RPQ.loss_function(Pi)
         Cmax = max(C)
-
-        # print(Carlier.loss_function(Pi))
         b = None
         for task in Pi:
             time = max(time, task[0]) + task[1]
@@ -93,21 +92,11 @@ class Carlier(SchragePmtn):
             if task == b:
                 break
 
-        # for task in Pi:
-        #     s = 0
-        #     for i in range(Pi.index(task), Pi.index(b) + 1):
-        #         s = s + Pi[i][1]
-        #     if s + task[0] + b[2] == Cmax:
-        #         x = (task == a)
-        #         print(x)
-        #         break
-        # poprawne
-
         c = None
-        for task_index in range(Pi.index(a), Pi.index(b) + 1):
+        for task_index in range(Pi.index(a), Pi.index(b)):
             if b[2] > Pi[task_index][2]:
                 c = Pi[task_index]
-        return a, b, c
+        return b, c
 
     @staticmethod
     def find_k(Pi, c, b):
@@ -115,7 +104,6 @@ class Carlier(SchragePmtn):
         _from = False
         for task in Pi:
             if _from:
-                # TODO Jeżeli będą bugi sprawdzić pass by refercne vs by value
                 k.append(task)
             if c == task:
                 _from = True
@@ -130,5 +118,4 @@ if __name__ == '__main__':
     for i in tab:
         n, data = Carlier.read_data('D:\Programming\python\SPD\data' + str(i) + '.txt')
         odp = Carlier.carlier(data)
-
         print("carlier dla " + str(i) + ' pliku wynik to: ' + str(odp))
