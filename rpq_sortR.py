@@ -44,7 +44,7 @@ class RPQ:
 def main():
     tab = [10, 20, 50, 100, 200, 500]
     for i in tab:
-        n, data = RPQ.readData('D:\Programming\python\SPD\data' + str(i) + '.txt')
+        n, data = RPQ.readData('data/data' + str(i) + '.txt')
         odp_r = RPQ.sort_R(data)
         odp_r_q = RPQ.sort_R_and_Q(data)
         times_r = RPQ.loss_function(odp_r)

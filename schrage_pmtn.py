@@ -87,7 +87,7 @@ class SchragePmtn(Schrage):
 def main():
     tab = [10, 20, 50, 100, 200, 500]
     for i in tab:
-        n, data = SchragePmtn.read_data('D:\Programming\python\SPD\data' + str(i) + '.txt')
+        n, data = SchragePmtn.read_data('data/data' + str(i) + '.txt')
         odp = SchragePmtn.schrage_pmtn(data)
 
         print('dla pliku data' + str(i) + '.txt wynik to:  ' + str(odp))

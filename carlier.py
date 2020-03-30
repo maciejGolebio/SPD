@@ -117,6 +117,6 @@ if __name__ == '__main__':
     tab = [10, 20, 50, 100, 200, 500]
     t = [5]
     for i in tab:
-        n, data = Carlier.read_data('D:\Programming\python\SPD\data' + str(i) + '.txt')
+        n, data = Carlier.read_data('data/data' + str(i) + '.txt')
         odp = Carlier.carlier(data)
         print("carlier dla " + str(i) + ' pliku wynik to: ' + str(odp))

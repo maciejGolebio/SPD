@@ -77,8 +77,8 @@ class Schrage:
 def main():
     tab = [10, 20, 50, 100, 200, 500]
     for i in tab:
-        n, data = RPQ.readData('D:\Programming\python\SPD\data' + str(i) + '.txt')
-        n1, data1 = RPQ.readData('D:\Programming\python\SPD\data' + str(i) + '.txt')
+        n, data = RPQ.readData('data/data' + str(i) + '.txt')
+        n1, data1 = RPQ.readData('data/data' + str(i) + '.txt')
         odp = Schrage.schrage(data)
         odp1 = Schrage.schrage_nlogn(data)
         times = RPQ.loss_function(odp)
