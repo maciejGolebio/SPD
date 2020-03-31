@@ -1,3 +1,6 @@
+from timeit import default_timer as timer
+from matplotlib import pyplot as plt
+
 class RPQ:
 
     @staticmethod
@@ -30,28 +33,49 @@ class RPQ:
     @staticmethod
     def sort_R(data):
         order_by_access_time = data.copy()
+        start = timer()
         order_by_access_time.sort(key=lambda x: x[0])
-        return order_by_access_time
+        end = timer()
+        executionTime = end - start
+        return order_by_access_time, executionTime
 
     @staticmethod
     def sort_R_and_Q(data):
         order = data.copy()
+        start = timer()
         order.sort(key=lambda x: (x[0], x[2]))
+        end = timer()
+        executionTime = end - start
         # print(order)
-        return order
+        return order, executionTime
 
 
 def main():
     tab = [10, 20, 50, 100, 200, 500]
+    rTimeTab = []
+    rqTimeTab = []
     for i in tab:
         n, data = RPQ.readData('data/data' + str(i) + '.txt')
-        odp_r = RPQ.sort_R(data)
-        odp_r_q = RPQ.sort_R_and_Q(data)
+        odp_r, rTime = RPQ.sort_R(data)
+        odp_r_q, rqTime = RPQ.sort_R_and_Q(data)
+        rTimeTab.append(rTime)
+        rqTimeTab.append(rqTime)
         times_r = RPQ.loss_function(odp_r)
         times_r_q = RPQ.loss_function(odp_r_q)
         print('Sortowanie po R dla pliku data' + str(i) + '.txt czas to:  ' + str(max(times_r)))
+        print('Dokonano w czasie: ' + str(rTime))
         print('Sortowanie po R i Q dla pliku data' + str(i) + '.txt czas to:  ' + str(max(times_r_q)))
+        print('Dokonano w czasie: ' + str(rqTime))
+    plt.plot(tab, rTimeTab)
+    plt.title("R")
+    plt.xlabel('data[x].txt')
+    plt.ylabel('Czas [s]')
 
+    # plt.plot(tab, rqTimeTab)
+    # plt.title("RQ")
+    # plt.xlabel('data[x].txt')
+    # plt.ylabel('Czas [s]')
 
+    plt.show()
 if __name__ == '__main__':
     main()

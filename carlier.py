@@ -3,6 +3,7 @@ import copy
 from rpq_sortR import RPQ
 from schrage import Schrage
 from schrage_pmtn import SchragePmtn
+from timeit import default_timer as timer
 
 
 class Carlier(SchragePmtn):
@@ -10,17 +11,20 @@ class Carlier(SchragePmtn):
     @staticmethod
     def carlier(data):
         UB = [math.inf]
+        start = timer()
         Carlier.do_carlier(data, UB)
-        return UB[0]
+        end = timer()
+        executionTime = end - start
+        return UB[0], executionTime
 
     @staticmethod
     def do_carlier(data, UB):
-        #Pi_star = data deepcoy
+        # Pi_star = data deepcoy
         Pi = Schrage.schrage_nlogn(data)
         U = max(RPQ.loss_function(Pi))
         if U < UB[0]:
             UB[0] = U
-            #Pi_star = Pi
+            # Pi_star = Pi
 
         b, c = Carlier.find_a_b_c(Pi)
         if c is None:
@@ -118,5 +122,6 @@ if __name__ == '__main__':
     t = [5]
     for i in tab:
         n, data = Carlier.read_data('data/data' + str(i) + '.txt')
-        odp = Carlier.carlier(data)
+        odp, carlierTime = Carlier.carlier(data)
         print("carlier dla " + str(i) + ' pliku wynik to: ' + str(odp))
+        print('Dokonano w czasie: ' + str(carlierTime))

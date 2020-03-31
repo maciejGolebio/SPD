@@ -1,7 +1,9 @@
 from math import inf
-
+from timeit import default_timer as timer
+from matplotlib import pyplot as plt
 from rpq_sortR import RPQ
 import heapq
+
 
 
 class Schrage:
@@ -26,6 +28,7 @@ class Schrage:
         G = []
         N = data.copy()
         t = min(N)[0]
+        start = timer()
         while len(G) != 0 or len(N) != 0:
             while len(N) != 0 and Schrage.save_min(N) <= t:
                 e = min(N, key=lambda x: x[0])
@@ -39,7 +42,9 @@ class Schrage:
                 t = t + e[1]
             else:
                 t = min(N, key=lambda x: x[0])[0]
-        return Pi
+        end = timer()
+        executionTime = end - start
+        return Pi, executionTime
 
     @staticmethod
     def schrage_nlogn(data):
@@ -61,6 +66,7 @@ class Schrage:
         G = []
         Pi = []
         t = N[0][0]
+        start = timer()
         while len(G) != 0 or len(N) != 0:
             while len(N) != 0 and Schrage.save_min(N) <= t:
                 e = heapq.heappop(N)
@@ -71,21 +77,40 @@ class Schrage:
                 t = t + e[1][1]
             else:
                 t = N[0][0]  # O(1)
-        return Pi
+        end = timer()
+        executionTime = end - start
+        return Pi, executionTime
 
 
 def main():
     tab = [10, 20, 50, 100, 200, 500]
+    schrageTimeTab = []
+    schrageNlognTimeTab = []
     for i in tab:
         n, data = RPQ.readData('data/data' + str(i) + '.txt')
         n1, data1 = RPQ.readData('data/data' + str(i) + '.txt')
-        odp = Schrage.schrage(data)
-        odp1 = Schrage.schrage_nlogn(data)
+        odp, schrageTime = Schrage.schrage(data)
+        odp1, schrageNlognTime = Schrage.schrage_nlogn(data)
+        schrageTimeTab.append(schrageTime)
+        schrageNlognTimeTab.append(schrageNlognTime)
         times = RPQ.loss_function(odp)
         times1 = RPQ.loss_function(odp1)
         print('dla pliku data na tablicy' + str(i) + '.txt wynik to:  ' + str(max(times)))
+        print('Dokonano w czasie: ' + str(schrageTime))
         print('dla pliku data na kopcu' + str(i) + '.txt wynik to:  ' + str(max(times1)))
+        print('Dokonano w czasie: ' + str(schrageNlognTime))
 
+    plt.plot(tab, schrageTimeTab)
+    plt.title("Schrage bez kolejki")
+    plt.xlabel('data[x].txt')
+    plt.ylabel('Czas [s]')
+
+    # plt.plot(tab, schrageNlognTimeTab)
+    # plt.title("Schrage z kolejką")
+    # plt.xlabel('data[x].txt')
+    # plt.ylabel('Czas [s]')
+
+    plt.show()
 
 if __name__ == '__main__':
     main()

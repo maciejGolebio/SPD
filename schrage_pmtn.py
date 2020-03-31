@@ -1,6 +1,7 @@
 import heapq
 from math import inf
-
+from timeit import default_timer as timer
+from matplotlib import pyplot as plt
 from rpq_sortR import RPQ
 from schrage import Schrage
 
@@ -22,7 +23,7 @@ class SchragePmtn(Schrage):
         Cmax = 0
         t = 0
         tmp = [0, 0, inf]
-
+        start = timer()
         while len(G) != 0 or len(N) != 0:
             while len(N) != 0 and Schrage.save_min(N) <= t:
                 e = min(N, key=lambda x: x[0])
@@ -42,7 +43,9 @@ class SchragePmtn(Schrage):
                 Cmax = max(Cmax, t + e[2])
             else:
                 t = min(N, key=lambda x: x[0])[0]
-        return Cmax
+        end = timer()
+        executionTime = end - start
+        return Cmax, executionTime
 
     @staticmethod
     def schrage_nlogn_pmtn(data) -> int:
@@ -64,6 +67,7 @@ class SchragePmtn(Schrage):
         t = 0
         tmp = [0, 0, inf]
         Cmax = 0
+        start = timer()
         while len(G) != 0 or len(N) != 0:
             while len(N) != 0 and Schrage.save_min(N) <= t:
                 e = heapq.heappop(N)
@@ -81,17 +85,37 @@ class SchragePmtn(Schrage):
                 Cmax = max(Cmax, t + e[1][2])
             else:
                 t = N[0][0]
-        return Cmax
+        end = timer()
+        executionTime = end - start
+        return Cmax, executionTime
 
 
 def main():
     tab = [10, 20, 50, 100, 200, 500]
+    schragePmtnTimeTab = []
+    schragePmthNlognTimeTab = []
     for i in tab:
         n, data = SchragePmtn.read_data('data/data' + str(i) + '.txt')
-        odp = SchragePmtn.schrage_pmtn(data)
+        odp, schrageTime = SchragePmtn.schrage_pmtn(data)
+        odp2, schrageNlognTime = SchragePmtn.schrage_nlogn_pmtn(data)
+        schragePmtnTimeTab.append(schrageTime)
+        schragePmthNlognTimeTab.append(schrageNlognTime)
+        print('Schrage: dla pliku data' + str(i) + '.txt wynik to:  ' + str(odp))
+        print('Dokonano w czasie: ' + str(schrageTime))
+        print('Schrage nlogn: dla pliku data' + str(i) + '.txt wynik to:  ' + str(odp))
+        print('Dokonano w czasie: ' + str(schrageNlognTime))
 
-        print('dla pliku data' + str(i) + '.txt wynik to:  ' + str(odp))
+    plt.plot(tab, schragePmtnTimeTab)
+    plt.title("Schrage PMTN bez kolejki")
+    plt.xlabel('data[x].txt')
+    plt.ylabel('Czas [s]')
 
+    # plt.plot(tab, schragePmthNlognTimeTab)
+    # plt.title("Schrage z kolejką")
+    # plt.xlabel('data[x].txt')
+    # plt.ylabel('Czas [s]')
+
+    plt.show()
 
 if __name__ == '__main__':
     main()
