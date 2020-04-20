@@ -1,5 +1,7 @@
+import math
 import sys
 import itertools as it
+import copy
 
 
 class WiTi:
@@ -22,10 +24,34 @@ class WiTi:
     def bruteForce(data):
         combination = it.permutations(data, len(data))
         F_out = sys.maxsize
+        best = []
         for i in list(combination):
             if WiTi.goalFunction(i) < F_out:
                 F_out = WiTi.goalFunction(i)
-        return F_out
+                best = i
+        return F_out, best
+
+    @staticmethod
+    def brute_force_rec(data):
+        def recursive(S, C_max, leaf, best):
+            if len(S) > 0:
+                for i in S:
+                    s = copy.copy(S)
+                    s.remove(i)
+                    l = copy.copy(leaf)
+                    l.append(i)
+                    recursive(s, C_max, l, best)
+            else:
+                C_tmp = WiTi.goalFunction(leaf)
+                if C_max[0] > C_tmp:
+                    C_max[0] = C_tmp
+                    best[0] = leaf
+
+        tmp = [math.inf]
+        leafs = []
+        perm = [[]]
+        recursive(data, tmp, leafs, perm)
+        return tmp[0], perm[0]
 
     @staticmethod
     def goalFunction(data):
@@ -46,6 +72,8 @@ class WiTi:
         return F_best
 
 
-print(WiTi.goalFunction(WiTi.readData('witiData/data10.txt')))
-print(WiTi.goalFunction(WiTi.sortD(WiTi.readData('witiData/data10.txt'))))
+# print(WiTi.goalFunction(WiTi.readData('witiData/data10.txt')))
+# print(WiTi.goalFunction(WiTi.sortD(WiTi.readData('witiData/data10.txt'))))
 print(WiTi.bruteForce(WiTi.readData('witiData/data10.txt')))
+data = WiTi.readData('witiData/data10.txt')
+print(WiTi.brute_force_rec(data))
