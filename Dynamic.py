@@ -61,7 +61,7 @@ def loopDynamic(n, d):
 def main():
     loop = []
     recursive = []
-    data = ['data/data10.txt']
+    data = ['witiData/data10.txt', 'witiData/data11.txt', 'witiData/data12.txt', 'witiData/data13.txt', 'witiData/data14.txt', 'witiData/data15.txt']
     result = 0
     for j in range(3):
         for d in data:
@@ -78,7 +78,7 @@ def main():
             recursive.append(F.pop())
     print(loop)
     print(recursive)
-    print(result / 3)
+    print(result / 3, "s")
 
 if __name__ == '__main__':
     main()
