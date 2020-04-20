@@ -37,7 +37,6 @@ def recursiveDynamic(I, d, F):
 def loopDynamic(n, d):
     F = []
     maxValueTab = []
-
     F.append(max(d[0][0] - d[0][2], 0) * d[0][1])
     for i in range(1, 2 ** n):
         binaryValue = bin(i).replace("0b", "")
@@ -74,7 +73,8 @@ def main():
             start = timer()
             recursiveDynamic(I, d, F)
             end = timer()
-            result = result + (end - start)
+            result = end - start
+            print("Podejście", j+1, ": Czas wykonania: ", result)
             recursive.append(F.pop())
     print(loop)
     print(recursive)
