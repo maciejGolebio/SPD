@@ -57,6 +57,7 @@ def loopDynamic(n, d):
         maxValueTab = []
     end = timer()
     result = end - start
+    print("Loop - wynik:", F.pop())
     print("Loop - czas wykonania:", result)
     return F.pop()
 
@@ -64,11 +65,12 @@ def loopDynamic(n, d):
 def main():
     loop = []
     recursive = []
-    data = ['witiData/data10.txt', 'witiData/data11.txt', 'witiData/data12.txt', 'witiData/data13.txt', 'witiData/data14.txt', 'witiData/data15.txt']
+    data = ['witiData/data10.txt', 'witiData/data11.txt', 'witiData/data12.txt', 'witiData/data13.txt', 'witiData/data14.txt', 'witiData/data15.txt', 'witiData/data16.txt', 'witiData/data17.txt', 'witiData/data18.txt', 'witiData/data19.txt', 'witiData/data20.txt']
     result = 0
     for j in range(3):
         print("PODEJŚCIE", j+1)
         for d in data:
+            print(str(d))
             n, d = readData(d)
             loop.append(loopDynamic(n, d))
             F = [0]
@@ -79,6 +81,7 @@ def main():
             recursiveDynamic(I, d, F)
             end = timer()
             result = end - start
+            print("Recursive - wynik: ", F.pop())
             print("Recursive - czas wykonania: ", result)
             recursive.append(F.pop())
     print(loop)
