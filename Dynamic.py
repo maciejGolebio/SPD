@@ -37,6 +37,7 @@ def recursiveDynamic(I, d, F):
 def loopDynamic(n, d):
     F = []
     maxValueTab = []
+    start = timer()
     F.append(max(d[0][0] - d[0][2], 0) * d[0][1])
     for i in range(1, 2 ** n):
         binaryValue = bin(i).replace("0b", "")
@@ -54,6 +55,9 @@ def loopDynamic(n, d):
         minValue = min(maxValueTab)
         F.append(minValue)
         maxValueTab = []
+    end = timer()
+    result = end - start
+    print("Loop - czas wykonania:", result)
     return F.pop()
 
 
@@ -63,6 +67,7 @@ def main():
     data = ['witiData/data10.txt', 'witiData/data11.txt', 'witiData/data12.txt', 'witiData/data13.txt', 'witiData/data14.txt', 'witiData/data15.txt']
     result = 0
     for j in range(3):
+        print("PODEJŚCIE", j+1)
         for d in data:
             n, d = readData(d)
             loop.append(loopDynamic(n, d))
@@ -74,11 +79,10 @@ def main():
             recursiveDynamic(I, d, F)
             end = timer()
             result = end - start
-            print("Podejście", j+1, ": Czas wykonania: ", result)
+            print("Recursive - czas wykonania: ", result)
             recursive.append(F.pop())
     print(loop)
     print(recursive)
-    print(result / 3, "s")
 
 if __name__ == '__main__':
     main()
