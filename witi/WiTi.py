@@ -74,6 +74,8 @@ class WiTi:
 
 # print(WiTi.goalFunction(WiTi.readData('witiData/data10.txt')))
 # print(WiTi.goalFunction(WiTi.sortD(WiTi.readData('witiData/data10.txt'))))
-print(WiTi.bruteForce(WiTi.readData('witiData/data10.txt')))
-data = WiTi.readData('witiData/data10.txt')
-print(WiTi.brute_force_rec(data))
+# print(WiTi.bruteForce(WiTi.readData('witiData/data10.txt')))
+# data = WiTi.readData('witiData/data10.txt')
+# print(WiTi.brute_force_rec(data))
+# for i in range(1, 11):
+#     print('/content/data/data'+str(i)+'.txt')

@@ -1,6 +1,7 @@
 from timeit import default_timer as timer
 from matplotlib import pyplot as plt
 
+
 class RPQ:
 
     @staticmethod
@@ -77,5 +78,7 @@ def main():
     # plt.ylabel('Czas [s]')
 
     plt.show()
+
+
 if __name__ == '__main__':
     main()
