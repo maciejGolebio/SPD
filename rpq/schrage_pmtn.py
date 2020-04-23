@@ -2,8 +2,8 @@ import heapq
 from math import inf
 from timeit import default_timer as timer
 from matplotlib import pyplot as plt
-from rpq_sortR import RPQ
-from schrage import Schrage
+from rpq.rpq_sortR import RPQ
+from rpq.schrage import Schrage
 
 
 class SchragePmtn(Schrage):

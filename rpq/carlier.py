@@ -1,8 +1,8 @@
 import math
 import copy
-from rpq_sortR import RPQ
-from schrage import Schrage
-from schrage_pmtn import SchragePmtn
+from rpq.rpq_sortR import RPQ
+from rpq.schrage import Schrage
+from rpq.schrage_pmtn import SchragePmtn
 from timeit import default_timer as timer
 
 
