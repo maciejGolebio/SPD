@@ -25,6 +25,6 @@ class FSPService:
         return S_tmp
 
 
-_, m, data = FSPService.read_data('D:\Programming\python\SPD\\fsp\data\data001.txt')
-Cmax = FSPService.loss_function(data, m)
-print(Cmax)
+#_, m, data = FSPService.read_data('D:\Programming\python\SPD\\fsp\data\data001.txt')
+#Cmax = FSPService.loss_function(data, m)
+#print(Cmax)
