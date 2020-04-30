@@ -11,9 +11,7 @@ class Johnson:
         k: int = len(data) - 1
         N = cp.deepcopy(data)
         Pi = [None] * (k + 1)
-        j = None
         while len(N) > 0:
-            x = np.where(N == np.amin(N))
             j, i = np.unravel_index(np.argmin(N, axis=None), np.shape(N))
             if N[j][0] < N[j][1]:
                 Pi[l] = N[j]
