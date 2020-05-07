@@ -16,8 +16,23 @@ class BranchAndBounds:
         return max_val
 
     @staticmethod
-    def bound_2():
-        pass
+    def bound_2(Pi, N, m, data: []):
+        max_val = -1
+        E = [sum(col) for col in zip(*N)]
+
+        for i in range(1, m + 1):
+            Ci = service.loss_function(Pi, i)
+            sum_k = 0
+            for k in range(i, m):
+                min_val = math.inf
+                for j in range(len(data)):
+                    if data[j][k] < min_val:
+                        min_val = data[j][k]
+                sum_k += min_val
+            if Ci + E[i - 1] + sum_k > max_val:
+                max_val = Ci + E[i - 1] + sum_k
+
+        return max_val
 
     @staticmethod
     def bound_3():
@@ -47,7 +62,7 @@ class BranchAndBounds:
             Pi.append(j)
             N.remove(j)
             if len(N) > 0:
-                LB = BranchAndBounds.bound_1(Pi, N, m)
+                LB = BranchAndBounds.bound_2(Pi, N, m, data)
                 pass
                 if LB <= UB[0]:
                     for i in N:
@@ -66,10 +81,10 @@ class BranchAndBounds:
 
 
 if __name__ == '__main__':
-    _, m, data = service.read_data('D:\Programming\python\SPD\\fsp\data\data_test.txt')
+    _, m, data = service.read_data('D:\Programming\python\SPD\\fsp\data\data001.txt')
     [Cmax], [perm] = BranchAndBounds.find_c_max(data, m)
     print(Cmax)
     # Pi = [[1, 14], [10, 15]]
     # N = [[19, 5], [16, 42]]
-    # tmp = BranchAndBounds.bound_1(Pi, N, 2)
-    #
+    # tmp = BranchAndBounds.bound_2(Pi, N, 2,data)
+    # print(tmp)
