@@ -54,8 +54,25 @@ class BranchAndBounds:
         return max_val
 
     @staticmethod
-    def bound_4():
-        pass
+    def bound_4(Pi, N, m):
+        max_val = -1
+        E = [sum(col) for col in zip(*N)]
+
+        for i in range(1, m + 1):
+            Ci = service.loss_function(Pi, i)
+            min_val = math.inf
+            sum_k = 0
+            for j in range(len(N)):
+                sum_k = 0
+                for k in range(i, m):
+                    sum_k += N[j][k]
+                if sum_k < min_val:
+                    min_val = sum_k
+
+            if Ci + E[i - 1] + min_val > max_val:
+                max_val = Ci + E[i - 1] + sum_k
+
+        return max_val
 
     @staticmethod
     def ub_1():
@@ -77,7 +94,7 @@ class BranchAndBounds:
             Pi.append(j)
             N.remove(j)
             if len(N) > 0:
-                LB = BranchAndBounds.bound_3(Pi, N, m)
+                LB = BranchAndBounds.bound_4(Pi, N, m)
                 pass
                 if LB <= UB[0]:
                     for i in N:
