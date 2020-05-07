@@ -11,13 +11,13 @@ class FSPService:
     def loss_function(data, m):
         S_tmp = 0
         C_tmp = [None] * m
-        for i in range(len(data[0])):
+        for i in range(m):
             C_tmp[i] = S_tmp + data[0][i]
             S_tmp = C_tmp[i]
 
         for d in data[1:]:
             S_tmp = 0
-            for i in range(len(d)):
+            for i in range(m):
                 C_tmp[i] = max(S_tmp, C_tmp[i]) + d[i]
                 S_tmp = C_tmp[i]
 

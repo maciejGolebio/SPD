@@ -27,6 +27,7 @@ class Johnson:
 
 _, m, data = fsp_service.FSPService().read_data('D:\Programming\python\SPD\\fsp\data\data001.txt')
 Pi = Johnson.find_cmax(data)
-cmax = fsp_service.FSPService.loss_function(Pi, 2)
+cmax = fsp_service.FSPService.loss_function(Pi, 1)
+
 print(Pi)
 print(cmax)
