@@ -35,8 +35,23 @@ class BranchAndBounds:
         return max_val
 
     @staticmethod
-    def bound_3():
-        pass
+    def bound_3(Pi, N, m):
+        max_val = -1
+        E = [sum(col) for col in zip(*N)]
+
+        for i in range(1, m + 1):
+            Ci = service.loss_function(Pi, i)
+            sum_k = 0
+            for k in range(i, m):
+                min_val = math.inf
+                for j in range(len(N)):
+                    if N[j][k] < min_val:
+                        min_val = N[j][k]
+                sum_k += min_val
+            if Ci + E[i - 1] + sum_k > max_val:
+                max_val = Ci + E[i - 1] + sum_k
+
+        return max_val
 
     @staticmethod
     def bound_4():
@@ -62,7 +77,7 @@ class BranchAndBounds:
             Pi.append(j)
             N.remove(j)
             if len(N) > 0:
-                LB = BranchAndBounds.bound_2(Pi, N, m, data)
+                LB = BranchAndBounds.bound_3(Pi, N, m)
                 pass
                 if LB <= UB[0]:
                     for i in N:
