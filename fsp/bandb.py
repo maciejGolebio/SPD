@@ -95,11 +95,11 @@ class BranchAndBounds:
             Pi.append(j)
             N.remove(j)
             if len(N) > 0:
-                LB = lb(Pi, N, m)
+                LB = lb(Pi, N, m,data)
                 pass
                 if LB <= UB[0]:
                     for i in N:
-                        BnB(i, N, Pi)
+                        BnB(i, N, Pi, lb)
             else:
                 Cmax = service.loss_function(Pi, m)
                 if Cmax < UB[0]:
@@ -108,14 +108,14 @@ class BranchAndBounds:
 
         Pi = []
         for j in N:
-            BnB(j, N, Pi,BranchAndBounds.bound_4())
+            BnB(j, N, Pi, BranchAndBounds.bound_4)
 
         return UB, Pi_star
 
 
 if __name__ == '__main__':
     _, m, data = service.read_data('D:\Programming\python\SPD\\fsp\data\\data002.txt')
-    [Cmax], [perm] = BranchAndBounds.find_c_max(data, m, BranchAndBounds.ub_1)
+    [Cmax], [perm] = BranchAndBounds.find_c_max(data, m, BranchAndBounds.ub_2)
     print(Cmax)
     # Pi = [[1, 14], [10, 15]]
     # N = [[19, 5], [16, 42]]
