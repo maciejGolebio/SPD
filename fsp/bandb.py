@@ -84,22 +84,22 @@ class BranchAndBounds:
         return service.loss_function(data, m)
 
     @staticmethod
-    def find_c_max(data, m, ub):
+    def find_c_max(data, m, ub, lb):
         N = copy.deepcopy(data)
         UB = [ub(data, m)]
         Pi_star = [[]]
 
-        def BnB(j, N_, Pi_, lb):
+        def BnB(j, N_, Pi_):
             Pi = copy.deepcopy(Pi_)
             N = copy.deepcopy(N_)
             Pi.append(j)
             N.remove(j)
             if len(N) > 0:
-                LB = lb(Pi, N, m,data)
+                LB = lb(Pi, N, m, data)
                 pass
                 if LB <= UB[0]:
                     for i in N:
-                        BnB(i, N, Pi, lb)
+                        BnB(i, N, Pi)
             else:
                 Cmax = service.loss_function(Pi, m)
                 if Cmax < UB[0]:
@@ -108,14 +108,26 @@ class BranchAndBounds:
 
         Pi = []
         for j in N:
-            BnB(j, N, Pi, BranchAndBounds.bound_4)
+            BnB(j, N, Pi)
 
         return UB, Pi_star
 
 
 if __name__ == '__main__':
     _, m, data = service.read_data('D:\Programming\python\SPD\\fsp\data\\data002.txt')
-    [Cmax], [perm] = BranchAndBounds.find_c_max(data, m, BranchAndBounds.ub_2)
+    Lb_functions = [BranchAndBounds.bound_1, BranchAndBounds.bound_2, BranchAndBounds.bound_3, BranchAndBounds.bound_4]
+    Ub_functions = [BranchAndBounds.ub_1, BranchAndBounds.ub_2]
+    for lb in Lb_functions:
+        for Ub_functions in Ub_functions:
+            """
+            Kombinacja funkcji
+            [Cmax], [perm] = BranchAndBounds.find_c_max(data, m, ub, lb)
+            print(Cmax)
+   
+            """
+            pass
+
+    [Cmax], [perm] = BranchAndBounds.find_c_max(data, m, BranchAndBounds.ub_2, BranchAndBounds.bound_4)
     print(Cmax)
     # Pi = [[1, 14], [10, 15]]
     # N = [[19, 5], [16, 42]]
