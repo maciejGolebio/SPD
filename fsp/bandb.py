@@ -6,7 +6,7 @@ from fsp.fsp_service import FSPService as service
 
 class BranchAndBounds:
     @staticmethod
-    def bound_1(Pi, N, m) -> int:
+    def bound_1(Pi, N, m, data) -> int:
         max_val = -1
         E = [sum(col) for col in zip(*N)]
         for i in range(1, m + 1):
@@ -36,7 +36,7 @@ class BranchAndBounds:
         return max_val
 
     @staticmethod
-    def bound_3(Pi, N, m):
+    def bound_3(Pi, N, m, data):
         max_val = -1
         E = [sum(col) for col in zip(*N)]
 
@@ -55,14 +55,14 @@ class BranchAndBounds:
         return max_val
 
     @staticmethod
-    def bound_4(Pi, N, m):
+    def bound_4(Pi, N, m, data):
         max_val = -1
         E = [sum(col) for col in zip(*N)]
 
         for i in range(m):
             Ci = service.loss_function(Pi, i + 1)
             min_val = math.inf
-            sum_k = None
+            # sum_k = None
             for j in range(len(N)):
                 sum_k = 0
                 for k in range(i + 1, m):
@@ -76,7 +76,7 @@ class BranchAndBounds:
         return max_val
 
     @staticmethod
-    def ub_1():
+    def ub_1(data, m):
         return math.inf
 
     @staticmethod
@@ -84,18 +84,18 @@ class BranchAndBounds:
         return service.loss_function(data, m)
 
     @staticmethod
-    def find_c_max(data, m):
+    def find_c_max(data, m, ub):
         N = copy.deepcopy(data)
-        UB = [BranchAndBounds.ub_1()]
+        UB = [ub(data, m)]
         Pi_star = [[]]
 
-        def BnB(j, N_, Pi_):
+        def BnB(j, N_, Pi_, lb):
             Pi = copy.deepcopy(Pi_)
             N = copy.deepcopy(N_)
             Pi.append(j)
             N.remove(j)
             if len(N) > 0:
-                LB = BranchAndBounds.bound_4(Pi, N, m)
+                LB = lb(Pi, N, m)
                 pass
                 if LB <= UB[0]:
                     for i in N:
@@ -108,14 +108,14 @@ class BranchAndBounds:
 
         Pi = []
         for j in N:
-            BnB(j, N, Pi)
+            BnB(j, N, Pi,BranchAndBounds.bound_4())
 
         return UB, Pi_star
 
 
 if __name__ == '__main__':
     _, m, data = service.read_data('D:\Programming\python\SPD\\fsp\data\\data002.txt')
-    [Cmax], [perm] = BranchAndBounds.find_c_max(data, m)
+    [Cmax], [perm] = BranchAndBounds.find_c_max(data, m, BranchAndBounds.ub_1)
     print(Cmax)
     # Pi = [[1, 14], [10, 15]]
     # N = [[19, 5], [16, 42]]
