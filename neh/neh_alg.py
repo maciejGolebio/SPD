@@ -9,7 +9,6 @@ class NEH:
     @staticmethod
     def neh(N, m):
         k = 1
-        print(N)
         W = [[sum(x), x] for x in N]
         pi = []
         pi_star = []
@@ -32,21 +31,20 @@ class NEH:
         x = None
         C_max = math.inf
         for i in range(len(pi)):
-
-            if not pi[i] == j:
-                tmp_task = pi[i]
-                del pi[i]
-                tmp_C_max = FSPService.loss_function(pi, m)
-                if tmp_C_max < C_max:
-                    C_max = tmp_C_max
-                    x = tmp_task
-                pi.insert(i, tmp_task)
+            if pi[i] == j:
+                continue
+            tmp_task = pi[i]
+            del pi[i]
+            tmp_C_max = FSPService.loss_function(pi, m)
+            if tmp_C_max < C_max:
+                C_max = tmp_C_max
+                x = tmp_task
+            pi.insert(i, tmp_task)
         return x
 
     @staticmethod
     def neh_plus(N, m):
         k = 1
-
         W = [[sum(x), x] for x in N]
         pi = []
         pi_star = []
@@ -75,10 +73,8 @@ class NEH:
 
 
 if __name__ == '__main__':
-    filepath = 'dane\\ta001.txt'
+    filepath = 'dane\\ta004.txt'
     _, m, data = NEHService.read_data_by_rows(filepath)
     C_max, pi = NEH.neh(data, m)
-
-    # x = NEH.select_x(pi, m, pi[2])
     print(C_max)
     print(NEH.neh_plus(data, m)[0])
