@@ -1,6 +1,9 @@
+import math
+import numpy as np
 import random
 
 from fsp.fsp_service import FSPService
+from neh.neh_service import NEHService
 import copy as cp
 
 
@@ -40,7 +43,8 @@ class SimulatedAnnealing:
 
     @staticmethod
     def move_swap(Pi, i, j):
-        pass
+        Pi[i], Pi[j] = Pi[j], Pi[i]
+        return Pi
 
     @staticmethod
     def move_insert(Pi, i, j):
@@ -55,13 +59,40 @@ class SimulatedAnnealing:
         pass
 
     @staticmethod
-    def reduce_temperature_linear(T):
-        pass
+    def reduce_temperature_linear(T, x):
+        return T - x
 
     @staticmethod
-    def reduce_temperature_geometric(T):
-        pass
+    def reduce_temperature_geometric(T, alpha):
+        return T * alpha
 
     @staticmethod
-    def reduce_temperature_log(T):
-        pass
+    def reduce_temperature_log(T, it):
+        b = it + 1
+        return T / np.log(b)
+
+
+if __name__ == '__main__':
+    filepath = 'D:\Programming\python\SPD\\neh\dane\\ta001.txt'
+    n, m, data = NEHService.read_data_by_rows(filepath)
+    L = [10 ** 2, 10 ** 3, 10 ** 4]
+    T_0 = [math.sqrt(n), n, n ** 2]
+    temp_reduce_fcn_arr = [SimulatedAnnealing.reduce_temperature_linear,
+                           SimulatedAnnealing.reduce_temperature_geometric,
+                           SimulatedAnnealing.reduce_temperature_log]
+    x = [T_0[0] / (10 ** 3), T_0[0] / (10 ** 4), T_0[0] / (10 ** 5)]
+    alpha = [.97, .95, .9]
+    init_solution_fcn_arr = [SimulatedAnnealing.init_solution_1,
+                             SimulatedAnnealing.init_solution_2,
+                             SimulatedAnnealing.init_solution_3]
+    move_fcn_arr = [SimulatedAnnealing.move_swap,
+                    SimulatedAnnealing.move_insert,
+                    SimulatedAnnealing.move_twist,
+                    SimulatedAnnealing.move_adjacent_swap]
+    SimulatedAnnealing.procedure(data, n, m,
+                                 L[0],
+                                 T_0[0],
+                                 temp_reduce_fcn_arr[0],
+                                 x[0],
+                                 init_solution_fcn_arr[0],
+                                 move_fcn_arr[0])
