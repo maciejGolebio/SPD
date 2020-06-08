@@ -3,7 +3,7 @@ import random
 from neh.neh_service import NEHService
 from fsp.fsp_service import FSPService
 import copy as cp
-
+import time
 
 def common_subseq(arr_1, arr_2):
     subseq = []
@@ -31,37 +31,19 @@ class Genetic:
     def crossover(J1, J2) -> []:
         r = random.randint(1, len(J1) - 1)
         gens_1 = J1[:r]
-        gens_2 = J2[r:]
-        for i in range(min(len(gens_1), len(gens_2))):
-            for j in range(min(len(gens_1), len(gens_2))):
-                if gens_1[i] in gens_2[j]:
-                    picker = random.randint(0, 1)
-                    if picker > 0:
-                        gens_1[i] = None
-                    else:
-                        gens_2[j] = None
-            picker = random.randint(0, 1)
-        if picker >= 0:
-            R = J1
-        else:
-            R = J2
-        rest = []
-        for a in R:
-            if (a not in gens_1) and (a not in gens_2):
-                rest.append(a)
+        gens_2 = cp.copy(J2)
+        for c in gens_1:
+            if c in gens_2:
+                gens_2.remove(c)
 
         child = gens_1 + gens_2
-        for i in range(len(child)):
-            if child[i] is None:
-                child[i] = rest.pop()
-
         if None in child:
             raise Exception("bad crossover")
         return child
 
     @staticmethod
     def mutation(J) -> []:
-        J1 = cp.copy(J)
+        J1 = cp.deepcopy(J)
         idx = range(len(J1))
         i, j = random.sample(idx, 2)
         J1[i], J1[j] = J1[j], J1[i]
@@ -87,7 +69,7 @@ class Genetic:
             r = random.gammavariate(alpha=1.01, beta=2)
             for x in pi:
                 if x[1] < r <= x[2] and population[x[0]] not in parents:
-                    parents.append(population[x[0]])
+                    parents.append(cp.copy(population[x[0]]))
         return list(iter.permutations(parents, 2))
 
     def calc_value(self, J):
@@ -105,8 +87,9 @@ class Genetic:
     def procedure(self):
         population = self.generate_start_population(self.n)
 
-        for _ in range(self.epoch):
-            new_population = [] + population
+        for j in range(self.epoch):
+
+            new_population = [] + cp.copy(population)
             parents = Genetic.selection(population)
             # selection
             for pair in parents:
@@ -120,14 +103,17 @@ class Genetic:
             new_population.sort(key=lambda x: -x[1])
             population = new_population[:len(population)]
 
-        return FSPService.loss_function(population[0][0], self.m)
+        return FSPService.loss_function(population[0][0], self.m), population[0][0]
 
 
 if __name__ == '__main__':
-    path = "D:\\Programming\\python\\SPD\\neh\\dane\\ta012.txt"
-    gen = Genetic(path, 10)
-
-    score = gen.procedure()
-    print(f'natural = {FSPService.loss_function(gen.data,gen.m)}')
-    print(f'genetic = {score}')
+    path = "D:\\Programming\\python\\SPD\\neh\\dane\\"
+    files = ['ta004.txt', 'ta014.txt', 'ta024.txt', 'ta034.txt', 'ta044.txt', 'ta074.txt']
+    for f in files:
+        gen = Genetic(path+str(f), 10)
+        start = time.time()
+        score = gen.procedure()
+        end = time.time()
+        t = end - start
+        print(f'for {f} genetic = {score[0]} with time = {t}')
     exit()
